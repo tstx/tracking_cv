@@ -1,38 +1,23 @@
 # https://broutonlab.com/blog/opencv-object-tracking
-
 import cv2 # opencv-contrib-python
-from enum import Enum
 
-class tracker_types(str, Enum):
-    BOOSTING = "BOOSTING",
-    MIL = "MIL",
-    KCF = "KCF",
-    TLD = "TLD",
-    MEDIANFLOW = "MEDIANFLOW",
-    GOTURN = "GOTURN",
-    MOSSE = "MOSSE",
-    CSRT = "CSRT"
+tracker_dict = {"BOOSTING": cv2.legacy.TrackerBoosting_create(),
+                "MIL": cv2.TrackerMIL_create(),
+                "KCF": cv2.TrackerKCF_create(),
+                "TLD": cv2.legacy.TrackerTLD_create(),
+                "MEDIANFLOW": cv2.legacy.TrackerMedianFlow_create(),
+                "MOSSE": cv2.legacy.TrackerMOSSE_create(),
+                "CSRT": cv2.TrackerCSRT_create()}
+
+def get_tracker(tracker_type):
+    if tracker_type not in tracker_dict:
+        raise ValueError("Tracker type not found in tracker_dict")
+    return tracker_dict[tracker_type]
 
 # select tracker type
-tracker_type = tracker_types.KCF
+tracker_type = "KCF"
+tracker = get_tracker(tracker_type)
 print(f"Using tracker: {tracker_type}")
-
-if tracker_type == 'BOOSTING':
-    tracker = cv2.legacy.TrackerBoosting_create()
-if tracker_type == 'MIL':
-    tracker = cv2.TrackerMIL_create() 
-if tracker_type == 'KCF':
-    tracker = cv2.TrackerKCF_create() 
-if tracker_type == 'TLD':
-    tracker = cv2.legacy.TrackerTLD_create() 
-if tracker_type == 'MEDIANFLOW':
-    tracker = cv2.legacy.TrackerMedianFlow_create() 
-if tracker_type == 'GOTURN': # GOTURN requires extra files
-    tracker = cv2.TrackerGOTURN_create()
-if tracker_type == 'MOSSE':
-    tracker = cv2.legacy.TrackerMOSSE_create()
-if tracker_type == "CSRT":
-    tracker = cv2.TrackerCSRT_create()
 
 # init video capture and get frame for roi
 use_webcam = False
