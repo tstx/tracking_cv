@@ -1,4 +1,6 @@
-import cv2
+# https://broutonlab.com/blog/opencv-object-tracking
+
+import cv2 # opencv-contrib-python
 from enum import Enum
 
 class tracker_types(str, Enum):
@@ -12,7 +14,7 @@ class tracker_types(str, Enum):
     CSRT = "CSRT"
 
 # select tracker type
-tracker_type = tracker_types.BOOSTING
+tracker_type = tracker_types.KCF
 print(f"Using tracker: {tracker_type}")
 
 if tracker_type == 'BOOSTING':
@@ -25,17 +27,16 @@ if tracker_type == 'TLD':
     tracker = cv2.legacy.TrackerTLD_create() 
 if tracker_type == 'MEDIANFLOW':
     tracker = cv2.legacy.TrackerMedianFlow_create() 
-if tracker_type == 'GOTURN':
+if tracker_type == 'GOTURN': # GOTURN requires extra files
     tracker = cv2.TrackerGOTURN_create()
 if tracker_type == 'MOSSE':
     tracker = cv2.legacy.TrackerMOSSE_create()
 if tracker_type == "CSRT":
     tracker = cv2.TrackerCSRT_create()
 
-
 # init video capture and get frame for roi
 use_webcam = False
-filename = "movie.mp4"
+filename = "./movie.mp4"
 frame = None
 cap = None
 
@@ -71,8 +72,6 @@ frame = cv2.resize(frame, new_frame_size)
 # Select the bounding box in the frame and initialze the tracker
 bbox = cv2.selectROI(frame, False)
 ret = tracker.init(frame, bbox)
-if not ret:
-    raise IOError("Cannot initialize tracker")
 
 # Start tracking
 while True:
