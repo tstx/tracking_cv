@@ -1,6 +1,4 @@
-from webcam import *
-import matplotlib.pyplot as plt
-import numpy as np
+import cv2
 
 # webcam_capture_loop(".")
 
@@ -8,14 +6,13 @@ def colorConvert(image):
   return(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
 
-cam = Webcam()
-for i in range(30):
-  cam.get_latest_capture()
+filename = "/home/tim/Videos/DSC_6342.MOV"
+cap = cv2.VideoCapture(filename)
+# cap = cv2.VideoCapture(0)
 
 
-# frame = cam.get_latest_capture()
-
-gray_frame_prev = cv2.cvtColor(cam.get_latest_capture(), cv2.COLOR_BGR2GRAY)
+ret, frame = cap.read()
+gray_frame_prev = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 
 #todo: blur before absdiff?
@@ -24,7 +21,7 @@ frame_max = 2000
 while (True):
   frame_count += 1
   # get image
-  frame = cam.get_latest_capture()
+  ret, frame = cap.read()
 
   # Converting frame to grayscale
   gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)

@@ -20,19 +20,13 @@ tracker = get_tracker(tracker_type)
 print(f"Using tracker: {tracker_type}")
 
 # init video capture and get frame for roi
-use_webcam = False
+use_webcam = True
 filename = "./movie.mp4"
 frame = None
 cap = None
 
 if use_webcam:
     cap = cv2.VideoCapture(0)
-else:
-    cap = cv2.VideoCapture(filename)
-if not cap.isOpened():
-    raise IOError("Cannot open capture device or file")
-
-if use_webcam:
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -43,6 +37,7 @@ if use_webcam:
             cv2.destroyWindow("Frame for ROI")
             break
 else:
+    cap = cv2.VideoCapture(filename)
     ret, frame = cap.read()
     if not ret:
         raise IOError("Cannot read capture")
